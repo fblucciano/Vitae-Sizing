@@ -11,29 +11,32 @@
 
     <style>
         :root {
+            --bg-white: #F8F9FA;
+            --panel-bg: #FFFFFF;
+            --panel-border: #E5E7EB;
             --venus-deep-blue: #171434;
             --venus-blue: #302B6A;
-            --venus-yellow: #FAA74A;
-            --tech-grey: #DEDEDE;
-            --text-grey: #575567;
-            --panel-bg: #232045;
-            --input-bg: #110e28;
+            --venus-yellow: #E68A2E;
+            --input-bg: #F3F4F6;
+            --input-border: #D1D5DB;
+            --text-main: #1F2937;
+            --text-grey: #6B7280;
             --white: #FFFFFF;
         }
 
         body {
             font-family: 'Circular', 'Yu Gothic UI', -apple-system, sans-serif;
-            background-color: var(--venus-deep-blue);
+            background-color: var(--bg-white);
             margin: 0;
             padding: 20px;
             display: flex;
             justify-content: center;
-            color: var(--white);
+            color: var(--text-main);
         }
 
         .app-container {
             width: 100%;
-            max-width: 500px;
+            max-width: 520px;
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -45,20 +48,16 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 5px;
+            padding: 0 5px;
         }
 
-        .logo { height: 22px; }
-
-        .top-actions {
-            display: flex;
-            gap: 8px;
-        }
+        .logo { height: 24px; filter: brightness(0.2); }
 
         .btn-action {
-            background-color: var(--tech-grey);
-            color: var(--venus-deep-blue);
+            background-color: var(--venus-deep-blue);
+            color: var(--white);
             border: none;
-            padding: 8px 12px;
+            padding: 8px 16px;
             border-radius: 20px;
             font-weight: bold;
             font-size: 11px;
@@ -69,6 +68,7 @@
 
         .btn-action.reset-btn {
             background-color: var(--venus-yellow);
+            color: var(--venus-deep-blue);
         }
 
         /* Panels */
@@ -76,19 +76,20 @@
             background-color: var(--panel-bg);
             border-radius: 12px;
             padding: 18px;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid var(--panel-border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
 
         .panel-title {
-            color: var(--venus-yellow);
-            font-size: 16px;
+            color: var(--venus-blue);
+            font-size: 15px;
             font-weight: bold;
             margin: 0 0 15px 0;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        /* Grids */
+        /* Grids Perfeitos e Alinhados */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
         .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
@@ -102,35 +103,42 @@
         }
 
         .input-group label {
-            color: var(--tech-grey);
+            color: var(--text-grey);
             font-size: 11px;
             font-weight: 600;
             text-align: center;
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .input-group input, .input-group select {
             background-color: var(--input-bg);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid var(--input-border);
             border-radius: 8px;
             padding: 12px 8px;
             text-align: center;
-            color: var(--venus-yellow);
+            color: var(--venus-deep-blue);
             font-family: 'Space Mono', monospace;
             font-weight: bold;
-            font-size: 15px;
+            font-size: 14px;
             outline: none;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .input-group input:focus, .input-group select:focus {
-            border-color: var(--venus-yellow);
+            border-color: var(--venus-blue);
+            background-color: var(--white);
         }
 
         /* Valve Cards */
         .valve-card {
             background-color: var(--input-bg);
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid var(--input-border);
             border-radius: 10px;
-            padding: 12px 5px;
+            padding: 10px 4px;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -142,27 +150,30 @@
         .valve-card.active {
             background-color: var(--venus-blue);
             border-color: var(--venus-yellow);
-            box-shadow: 0 0 15px rgba(250, 167, 74, 0.2);
+            box-shadow: 0 4px 12px rgba(48, 43, 106, 0.2);
             opacity: 1;
         }
 
         .valve-title {
-            color: var(--white);
+            color: var(--text-main);
             font-weight: bold;
-            font-size: 16px;
-            margin-bottom: 4px;
+            font-size: 15px;
+            margin-bottom: 2px;
         }
 
-        .valve-label { color: var(--tech-grey); font-size: 9px; text-transform: uppercase; }
-        .valve-data { font-family: 'Space Mono', monospace; color: var(--tech-grey); font-size: 10px; margin-bottom: 6px; }
-        
+        .valve-card.active .valve-title { color: var(--white); }
+
+        .valve-label { color: var(--text-grey); font-size: 9px; text-transform: uppercase; }
+        .valve-card.active .valve-label { color: #E5E7EB; }
+
+        .valve-data { font-family: 'Space Mono', monospace; color: var(--text-main); font-size: 10px; margin-bottom: 4px; }
         .valve-card.active .valve-data { color: var(--white); }
         .valve-card.active .vitae-val { color: var(--venus-yellow); font-size: 11px; }
 
-        /* Imagem Dinâmica da Válvula */
+        /* Imagem da Válvula Aumentada em 30% */
         .valve-img-container {
             width: 100%;
-            height: 45px;
+            height: 58px; /* Aumentado proporcionalmente (~30%) */
             margin: 4px 0;
             display: flex;
             align-items: center;
@@ -173,14 +184,15 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
         }
 
         /* Result Cards */
         .result-card {
             background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
             border-radius: 10px;
-            padding: 10px 5px;
+            padding: 8px 4px;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -188,15 +200,16 @@
         }
 
         .result-title {
-            color: var(--tech-grey);
-            font-size: 9px;
+            color: var(--text-grey);
+            font-size: 8px;
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             letter-spacing: 0.5px;
-            min-height: 22px;
+            min-height: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
+            line-height: 1.1;
         }
 
         .result-values {
@@ -204,30 +217,31 @@
             justify-content: space-around;
             align-items: center;
             font-family: 'Space Mono', monospace;
-            font-size: 16px;
+            font-size: 14px;
             height: 100%;
+            color: var(--venus-deep-blue);
         }
 
         .result-values .col {
             display: flex;
             flex-direction: column;
-            gap: 5px;
-            font-size: 9px;
+            gap: 2px;
+            font-size: 8px;
             color: var(--text-grey);
         }
 
-        .result-values .col span { font-size: 14px; }
+        .result-values .col span { font-size: 13px; color: var(--venus-deep-blue); font-weight: bold; }
 
         /* Highlight Selector */
         .volume-selector {
-            background-color: rgba(250, 167, 74, 0.15);
+            background-color: var(--white);
             border: 1px solid var(--venus-yellow);
             width: 100%;
-            padding: 8px;
+            padding: 8px 4px;
             border-radius: 8px;
-            color: var(--venus-yellow);
+            color: var(--venus-deep-blue);
             font-weight: bold;
-            font-size: 12px;
+            font-size: 11px;
             text-align: center;
             outline: none;
             cursor: pointer;
@@ -235,18 +249,17 @@
 
         /* Footer */
         .footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             background-color: var(--panel-bg);
-            padding: 12px 18px;
+            border: 1px solid var(--panel-border);
+            padding: 14px 18px;
             border-radius: 12px;
             margin-top: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
 
         .footer-text {
-            color: var(--tech-grey);
-            font-size: 9px;
+            color: var(--text-grey);
+            font-size: 10px;
             text-align: center;
             line-height: 1.4;
         }
@@ -259,10 +272,7 @@
     <!-- Top Bar -->
     <div class="top-bar">
         <img src="https://raw.githubusercontent.com/fblucciano/imagens-venus/1a75aeb06adc8e2e8fbcba2fe4acebfbd0113d01/Venus_logo_OG_adj.2026_logo_sec.png" alt="VenusMedtech" class="logo">
-        <div class="top-actions">
-            <button class="btn-action" onclick="alert('Report generator feature coming soon.')">✉ Email</button>
-            <button class="btn-action reset-btn" onclick="location.reload()">Reset</button>
-        </div>
+        <button class="btn-action reset-btn" onclick="location.reload()">Reset</button>
     </div>
 
     <!-- Section 1: Patient & Measurements -->
@@ -409,10 +419,8 @@
 
     <!-- Footer -->
     <div class="footer">
-        <div class="footer-text" style="text-align: left; font-size: 16px;">⌂ ⓘ</div>
         <div class="footer-text">
-            All measurements are automatic calculations<br>
-            based on the entered values and device specifications.
+            <strong>Disclaimer:</strong> This tool is a calculation support calculator only and should not be used as the sole source to determine the valve size. The final valve size selection must be determined and validated by the <strong>Heart Team</strong>.
         </div>
     </div>
 
@@ -524,11 +532,11 @@
             if (oversizePct >= 0) {
                 resOversizeLbl.innerText = 'OVERSIZING';
                 resOversizeVal.innerText = '▲ ' + oversizePct.toFixed(1) + '%';
-                resOversizeVal.style.color = '#4CAF50';
+                resOversizeVal.style.color = '#2E7D32';
             } else {
                 resOversizeLbl.innerText = 'UNDERSIZING';
                 resOversizeVal.innerText = '▼ ' + Math.abs(oversizePct).toFixed(1) + '%';
-                resOversizeVal.style.color = '#F44336';
+                resOversizeVal.style.color = '#C62828';
             }
         }
 
@@ -537,11 +545,11 @@
         if (isNaN(calc)) {
             resCalc.innerText = '--'; resCalc.style.color = 'var(--text-grey)';
         } else if (calc <= 400) {
-            resCalc.innerText = 'Mild'; resCalc.style.color = '#4CAF50'; 
+            resCalc.innerText = 'Mild'; resCalc.style.color = '#2E7D32'; 
         } else if (calc <= 600) {
-            resCalc.innerText = 'Moderate'; resCalc.style.color = '#FFC107'; 
+            resCalc.innerText = 'Moderate'; resCalc.style.color = '#E65100'; 
         } else {
-            resCalc.innerText = 'Severe'; resCalc.style.color = '#F44336'; 
+            resCalc.innerText = 'Severe'; resCalc.style.color = '#C62828'; 
         }
     }
 </script>
