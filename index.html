@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VenusMedtech - Sizing App</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --venus-deep-blue: #171434;
+            --venus-blue: #302B6A;
+            --venus-yellow: #FAA74A;
+            --tech-grey: #DEDEDE;
+            --text-grey: #575567;
+            --panel-bg: #232045;
+            --input-bg: #110e28;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Circular', 'Yu Gothic UI', -apple-system, sans-serif;
+            background-color: var(--venus-deep-blue);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            color: var(--white);
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .logo { height: 22px; }
+
+        .top-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-action {
+            background-color: var(--tech-grey);
+            color: var(--venus-deep-blue);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 11px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-action.reset-btn {
+            background-color: var(--venus-yellow);
+        }
+
+        /* Panels */
+        .panel {
+            background-color: var(--panel-bg);
+            border-radius: 12px;
+            padding: 18px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .panel-title {
+            color: var(--venus-yellow);
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0 0 15px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Grids */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+
+        /* Inputs */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-group label {
+            color: var(--tech-grey);
+            font-size: 11px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .input-group input, .input-group select {
+            background-color: var(--input-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 12px 8px;
+            text-align: center;
+            color: var(--venus-yellow);
+            font-family: 'Space Mono', monospace;
+            font-weight: bold;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: var(--venus-yellow);
+        }
+
+        /* Valve Cards */
+        .valve-card {
+            background-color: var(--input-bg);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 12px 5px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+            opacity: 0.6;
+        }
+
+        .valve-card.active {
+            background-color: var(--venus-blue);
+            border-color: var(--venus-yellow);
+            box-shadow: 0 0 15px rgba(250, 167, 74, 0.2);
+            opacity: 1;
+        }
+
+        .valve-title {
+            color: var(--white);
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .valve-label { color: var(--tech-grey); font-size: 9px; text-transform: uppercase; }
+        .valve-data { font-family: 'Space Mono', monospace; color: var(--tech-grey); font-size: 10px; margin-bottom: 6px; }
+        
+        .valve-card.active .valve-data { color: var(--white); }
+        .valve-card.active .vitae-val { color: var(--venus-yellow); font-size: 11px; }
+
+        /* Imagem Dinâmica da Válvula */
+        .valve-img-container {
+            width: 100%;
+            height: 45px;
+            margin: 4px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .valve-img-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        /* Result Cards */
+        .result-card {
+            background-color: var(--input-bg);
+            border-radius: 10px;
+            padding: 10px 5px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .result-title {
+            color: var(--tech-grey);
+            font-size: 9px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            min-height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-values {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 16px;
+            height: 100%;
+        }
+
+        .result-values .col {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            font-size: 9px;
+            color: var(--text-grey);
+        }
+
+        .result-values .col span { font-size: 14px; }
+
+        /* Highlight Selector */
+        .volume-selector {
+            background-color: rgba(250, 167, 74, 0.15);
+            border: 1px solid var(--venus-yellow);
+            width: 100%;
+            padding: 8px;
+            border-radius: 8px;
+            color: var(--venus-yellow);
+            font-weight: bold;
+            font-size: 12px;
+            text-align: center;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--panel-bg);
+            padding: 12px 18px;
+            border-radius: 12px;
+            margin-top: 5px;
+        }
+
+        .footer-text {
+            color: var(--tech-grey);
+            font-size: 9px;
+            text-align: center;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <img src="https://raw.githubusercontent.com/fblucciano/imagens-venus/1a75aeb06adc8e2e8fbcba2fe4acebfbd0113d01/Venus_logo_OG_adj.2026_logo_sec.png" alt="VenusMedtech" class="logo">
+        <div class="top-actions">
+            <button class="btn-action" onclick="alert('Report generator feature coming soon.')">✉ Email</button>
+            <button class="btn-action reset-btn" onclick="location.reload()">Reset</button>
+        </div>
+    </div>
+
+    <!-- Section 1: Patient & Measurements -->
+    <div class="panel">
+        <h2 class="panel-title">PATIENT & MEASUREMENTS</h2>
+        
+        <div class="grid-2" style="margin-bottom: 12px;">
+            <div class="input-group">
+                <label>Patient Name (Optional)</label>
+                <input type="text" id="in-name" placeholder="John Doe">
+            </div>
+            <div class="input-group">
+                <label>Native Annulus Area (mm²)</label>
+                <input type="number" id="in-area" placeholder="0" class="trigger-calc">
+            </div>
+        </div>
+
+        <div class="grid-3" style="margin-bottom: 12px;">
+            <div class="input-group">
+                <label>Preferred THV</label>
+                <select id="in-pref" class="trigger-calc">
+                    <option value="Automatic">Auto</option>
+                    <option value="AB20">AB20</option>
+                    <option value="AB23">AB23</option>
+                    <option value="AB26">AB26</option>
+                    <option value="AB29">AB29</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>LCA Height</label>
+                <input type="number" id="in-lca" placeholder="mm" class="trigger-calc">
+            </div>
+            <div class="input-group">
+                <label>RCA Height</label>
+                <input type="number" id="in-rca" placeholder="mm" class="trigger-calc">
+            </div>
+        </div>
+
+        <div class="grid-3">
+            <div class="input-group">
+                <label>Calcification</label>
+                <input type="number" id="in-calc" placeholder="mm³" class="trigger-calc">
+            </div>
+            <div class="input-group">
+                <label>STJL Height</label>
+                <input type="number" id="in-stjl" placeholder="mm" class="trigger-calc">
+            </div>
+            <div class="input-group">
+                <label>STJR Height</label>
+                <input type="number" id="in-stjr" placeholder="mm" class="trigger-calc">
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Recommended Size -->
+    <div class="panel">
+        <h2 class="panel-title">RECOMMENDED SIZE</h2>
+        <div class="grid-4">
+            <!-- AB20 -->
+            <div class="valve-card" id="card-AB20">
+                <div class="valve-title">AB20</div>
+                <div class="valve-label">Area Range</div>
+                <div class="valve-data">260-333</div>
+                <div class="valve-img-container">
+                    <img src="https://raw.githubusercontent.com/fblucciano/imagens-venus/1a75aeb06adc8e2e8fbcba2fe4acebfbd0113d01/VItae-F.png" alt="Vitae Valve">
+                </div>
+                <div class="valve-label">Vitae Area</div>
+                <div class="valve-data vitae-val" id="vitae-AB20">323.65</div>
+            </div>
+            <!-- AB23 -->
+            <div class="valve-card" id="card-AB23">
+                <div class="valve-title">AB23</div>
+                <div class="valve-label">Area Range</div>
+                <div class="valve-data">330-433</div>
+                <div class="valve-img-container">
+                    <img src="https://raw.githubusercontent.com/fblucciano/imagens-venus/1a75aeb06adc8e2e8fbcba2fe4acebfbd0113d01/VItae-F.png" alt="Vitae Valve">
+                </div>
+                <div class="valve-label">Vitae Area</div>
+                <div class="valve-data vitae-val" id="vitae-AB23">419.10</div>
+            </div>
+            <!-- AB26 -->
+            <div class="valve-card" id="card-AB26">
+                <div class="valve-title">AB26</div>
+                <div class="valve-label">Area Range</div>
+                <div class="valve-data">430-551</div>
+                <div class="valve-img-container">
+                    <img src="https://raw.githubusercontent.com/fblucciano/imagens-venus/1a75aeb06adc8e2e8fbcba2fe4acebfbd0113d01/VItae-F.png" alt="Vitae Valve">
+                </div>
+                <div class="valve-label">Vitae Area</div>
+                <div class="valve-data vitae-val" id="vitae-AB26">526.85</div>
+            </div>
+            <!-- AB29 -->
+            <div class="valve-card" id="card-AB29">
+                <div class="valve-title">AB29</div>
+                <div class="valve-label">Area Range</div>
+                <div class="valve-data">543-669</div>
+                <div class="valve-img-container">
+                    <img src="https://raw.githubusercontent.com/fblucciano/imagens-venus/1a75aeb06adc8e2e8fbcba2fe4acebfbd0113d01/VItae-F.png" alt="Vitae Valve">
+                </div>
+                <div class="valve-label">Vitae Area</div>
+                <div class="valve-data vitae-val" id="vitae-AB29">655.97</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3: Key Results -->
+    <div class="panel">
+        <h2 class="panel-title">KEY RESULTS</h2>
+        <div class="grid-5">
+            <div class="result-card">
+                <div class="result-title">CORONARY<br>CLEARANCE</div>
+                <div class="result-values">
+                    <div class="col">LCA<span id="res-lca">--</span></div>
+                    <div class="col">RCA<span id="res-rca">--</span></div>
+                </div>
+            </div>
+            <div class="result-card">
+                <div class="result-title">STJ<br>CLEARANCE</div>
+                <div class="result-values">
+                    <div class="col">STJL<span id="res-stjl">--</span></div>
+                    <div class="col">STJR<span id="res-stjr">--</span></div>
+                </div>
+            </div>
+            <div class="result-card">
+                <div class="result-title">CALCIFICATION<br>SEVERITY</div>
+                <div class="result-values" style="font-size: 11px; font-weight:bold; font-family:'Circular', sans-serif;" id="res-calc">
+                    --
+                </div>
+            </div>
+            <div class="result-card">
+                <div class="result-title" id="res-oversize-label">OVERSIZING</div>
+                <div class="result-values" style="font-size: 12px; font-weight:bold;" id="res-oversize-val">
+                    --
+                </div>
+            </div>
+            <div class="result-card" style="justify-content: flex-end;">
+                <div class="result-title" style="margin-bottom: 4px;">VOLUME</div>
+                <select class="volume-selector trigger-calc" id="in-vol">
+                    <option value="Nominal">Nominal</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-text" style="text-align: left; font-size: 16px;">⌂ ⓘ</div>
+        <div class="footer-text">
+            All measurements are automatic calculations<br>
+            based on the entered values and device specifications.
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // 1. Dados Matemáticos Oficiais
+    const valveMath = {
+        "AB20": { "-3 cc": 260.16, "-2 cc": 286.52, "-1 cc": 307.91, "Nominal": 323.65, "+0.5 cc": 333.29 },
+        "AB23": { "-4 cc": 330.06, "-3 cc": 356.33, "-2 cc": 380.13, "-1 cc": 404.71, "Nominal": 419.10, "+1 cc": 433.74 },
+        "AB26": { "-5 cc": 430.05, "-4 cc": 456.17, "-3 cc": 475.29, "-2 cc": 490.87, "-1 cc": 510.71, "Nominal": 526.85, "+1 cc": 543.25, "+2 cc": 551.55 },
+        "AB29": { "-7 cc": 543.25, "-6 cc": 559.90, "-5 cc": 585.35, "-4 cc": 606.99, "-3 cc": 620.16, "-2 cc": 633.47, "-1 cc": 642.42, "Nominal": 655.97, "+1 cc": 669.66 }
+    };
+
+    const heights = {
+        "AB20": { coronary: 7, stj: 9.2 },
+        "AB23": { coronary: 7.8, stj: 10.4 },
+        "AB26": { coronary: 10.1, stj: 12.8 },
+        "AB29": { coronary: 11, stj: 13.9 }
+    };
+
+    const icons = { check: '✅', cancel: '❌', warning: '⚠️' };
+
+    // 2. Escutar eventos
+    document.querySelectorAll('.trigger-calc').forEach(el => {
+        el.addEventListener('input', runSizingEngine);
+    });
+
+    // 3. Motor Principal
+    function runSizingEngine() {
+        const area = parseFloat(document.getElementById('in-area').value);
+        const pref = document.getElementById('in-pref').value;
+        const lca = parseFloat(document.getElementById('in-lca').value);
+        const rca = parseFloat(document.getElementById('in-rca').value);
+        const stjl = parseFloat(document.getElementById('in-stjl').value);
+        const stjr = parseFloat(document.getElementById('in-stjr').value);
+        const calc = parseFloat(document.getElementById('in-calc').value);
+        const volSelect = document.getElementById('in-vol');
+
+        // -- Lógica 1: Válvula Recomendada --
+        let activeValve = null;
+        if (pref === 'Automatic') {
+            if (area >= 260 && area <= 330) activeValve = 'AB20';
+            else if (area > 330 && area <= 430) activeValve = 'AB23';
+            else if (area > 430 && area <= 543) activeValve = 'AB26';
+            else if (area > 543) activeValve = 'AB29'; 
+        } else {
+            activeValve = pref;
+        }
+
+        // Reset visual 
+        ['AB20', 'AB23', 'AB26', 'AB29'].forEach(v => {
+            document.getElementById(`card-${v}`).classList.remove('active');
+            document.getElementById(`vitae-${v}`).innerText = valveMath[v]["Nominal"];
+        });
+
+        if (activeValve) {
+            document.getElementById(`card-${activeValve}`).classList.add('active');
+
+            // -- Lógica 2: Atualização do Volume Dropdown --
+            const currentVol = volSelect.value;
+            const options = Object.keys(valveMath[activeValve]);
+            
+            if (volSelect.dataset.valve !== activeValve) {
+                volSelect.innerHTML = '';
+                options.forEach(opt => {
+                    const el = document.createElement('option');
+                    el.value = opt; el.innerText = opt;
+                    volSelect.appendChild(el);
+                });
+                volSelect.dataset.valve = activeValve;
+                volSelect.value = options.includes(currentVol) ? currentVol : 'Nominal';
+            }
+
+            const selectedVol = volSelect.value;
+            document.getElementById(`vitae-${activeValve}`).innerText = valveMath[activeValve][selectedVol].toFixed(2);
+        } else {
+            volSelect.innerHTML = '<option value="Nominal">Nominal</option>';
+            volSelect.dataset.valve = '';
+        }
+
+        // -- Lógica 3: Clearances e Oversizing --
+        const resLca = document.getElementById('res-lca');
+        const resRca = document.getElementById('res-rca');
+        const resStjl = document.getElementById('res-stjl');
+        const resStjr = document.getElementById('res-stjr');
+        const resOversizeLbl = document.getElementById('res-oversize-label');
+        const resOversizeVal = document.getElementById('res-oversize-val');
+
+        if (!activeValve || isNaN(area) || area <= 0) {
+            resLca.innerText = '--'; resRca.innerText = '--';
+            resStjl.innerText = '--'; resStjr.innerText = '--';
+            resOversizeLbl.innerText = 'OVERSIZING';
+            resOversizeVal.innerText = '--';
+            resOversizeVal.style.color = 'var(--text-grey)';
+        } else {
+            // Coronárias
+            resLca.innerText = isNaN(lca) ? icons.cancel : ((lca - heights[activeValve].coronary >= 0) ? icons.check : icons.cancel);
+            resRca.innerText = isNaN(rca) ? icons.cancel : ((rca - heights[activeValve].coronary >= 0) ? icons.check : icons.cancel);
+            
+            // STJ
+            resStjl.innerText = isNaN(stjl) ? icons.warning : ((stjl - heights[activeValve].stj >= 0) ? icons.check : icons.warning);
+            resStjr.innerText = isNaN(stjr) ? icons.warning : ((stjr - heights[activeValve].stj >= 0) ? icons.check : icons.warning);
+            
+            // Oversizing / Undersizing
+            const currentValveArea = valveMath[activeValve][volSelect.value];
+            const oversizePct = ((currentValveArea / area) - 1) * 100;
+            
+            if (oversizePct >= 0) {
+                resOversizeLbl.innerText = 'OVERSIZING';
+                resOversizeVal.innerText = '▲ ' + oversizePct.toFixed(1) + '%';
+                resOversizeVal.style.color = '#4CAF50';
+            } else {
+                resOversizeLbl.innerText = 'UNDERSIZING';
+                resOversizeVal.innerText = '▼ ' + Math.abs(oversizePct).toFixed(1) + '%';
+                resOversizeVal.style.color = '#F44336';
+            }
+        }
+
+        // -- Lógica 4: Calcification Severity --
+        const resCalc = document.getElementById('res-calc');
+        if (isNaN(calc)) {
+            resCalc.innerText = '--'; resCalc.style.color = 'var(--text-grey)';
+        } else if (calc <= 400) {
+            resCalc.innerText = 'Mild'; resCalc.style.color = '#4CAF50'; 
+        } else if (calc <= 600) {
+            resCalc.innerText = 'Moderate'; resCalc.style.color = '#FFC107'; 
+        } else {
+            resCalc.innerText = 'Severe'; resCalc.style.color = '#F44336'; 
+        }
+    }
+</script>
+
+</body>
+</html>
