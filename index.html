@@ -45,14 +45,15 @@
             flex-direction: column;
             gap: 15px;
             box-sizing: border-box;
+            margin: 0 auto;
         }
 
-        /* MODO DE EXPORTAÇÃO PDF */
+        /* MODO DE EXPORTAÇÃO PDF (Centralizado) */
         .app-container.pdf-print-mode {
             max-width: 520px !important;
             width: 520px !important;
             padding: 10px !important;
-            margin: 0 !important;
+            margin: 0 auto !important;
         }
 
         .top-bar {
@@ -376,7 +377,7 @@
 
 <script>
     /* =================================================================
-       EXPORT TO PDF FUNCTIONALITY
+       EXPORT TO PDF FUNCTIONALITY (Centralizado)
        ================================================================= */
     function exportToPDF() {
         document.getElementById('action-buttons').style.display = 'none';
@@ -384,7 +385,7 @@
         container.classList.add('pdf-print-mode');
 
         const opt = {
-            margin:       10, 
+            margin:       [10, 36, 10, 36], // Margens laterais ajustadas para centralizar o bloco de 520px na A4
             filename:     'VenusP_Sizing_Report.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 2, useCORS: true, windowWidth: 520, x: 0 }, 
