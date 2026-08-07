@@ -10,6 +10,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
+    <!-- Biblioteca para Geração de PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
         :root {
             --bg-white: #F8F9FA;
@@ -41,6 +44,15 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+            box-sizing: border-box;
+        }
+
+        /* MODO DE EXPORTAÇÃO PDF */
+        .app-container.pdf-print-mode {
+            max-width: 520px !important;
+            width: 520px !important;
+            padding: 10px !important;
+            margin: 0 !important;
         }
 
         .top-bar {
@@ -71,12 +83,18 @@
             color: var(--venus-deep-blue);
         }
 
+        .btn-action.export-btn {
+            background-color: #2E7D32;
+            color: var(--white);
+        }
+
         .panel {
             background-color: var(--panel-bg);
             border-radius: 12px;
             padding: 18px;
             border: 1px solid var(--panel-border);
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            box-sizing: border-box;
         }
 
         .panel-title {
@@ -98,7 +116,7 @@
         .input-group input, .input-group select { background-color: var(--input-bg); border: 1px solid var(--input-border); border-radius: 8px; padding: 12px 8px; text-align: center; color: var(--venus-deep-blue); font-family: 'Space Mono', monospace; font-weight: bold; font-size: 14px; outline: none; width: 100%; box-sizing: border-box; }
         .input-group input:focus, .input-group select:focus { border-color: var(--venus-blue); background-color: var(--white); }
 
-        .valve-card { background-color: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; padding: 10px 4px; text-align: center; display: flex; flex-direction: column; align-items: center; transition: all 0.3s ease; opacity: 0.6; cursor: pointer; }
+        .valve-card { background-color: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; padding: 10px 4px; text-align: center; display: flex; flex-direction: column; align-items: center; transition: all 0.3s ease; opacity: 0.6; cursor: pointer; box-sizing: border-box; }
         .valve-card.active { background-color: var(--venus-blue); border-color: var(--venus-yellow); box-shadow: 0 4px 12px rgba(48, 43, 106, 0.2); opacity: 1; }
         .valve-title { color: var(--text-main); font-weight: bold; font-size: 15px; margin-bottom: 2px; }
         .valve-card.active .valve-title { color: var(--white); }
@@ -111,13 +129,13 @@
         .valve-img-container { width: 100%; height: 75px; margin: 4px 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .valve-img-container img { max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.4s ease; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); }
 
-        .result-card { background-color: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; padding: 8px 4px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
+        .result-card { background-color: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; padding: 8px 4px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .result-title { color: var(--text-grey); font-size: 8px; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px; min-height: 24px; display: flex; align-items: center; justify-content: center; line-height: 1.1; }
         .result-values { display: flex; justify-content: space-around; align-items: center; font-family: 'Space Mono', monospace; font-size: 14px; height: 100%; color: var(--venus-deep-blue); }
         .result-values .col { display: flex; flex-direction: column; gap: 2px; font-size: 8px; color: var(--text-grey); }
         .result-values .col span { font-size: 13px; color: var(--venus-deep-blue); font-weight: bold; }
 
-        .volume-selector { background-color: var(--white); border: 1px solid var(--venus-yellow); width: 100%; padding: 8px 4px; border-radius: 8px; color: var(--venus-deep-blue); font-weight: bold; font-size: 11px; text-align: center; outline: none; cursor: pointer; }
+        .volume-selector { background-color: var(--white); border: 1px solid var(--venus-yellow); width: 100%; padding: 8px 4px; border-radius: 8px; color: var(--venus-deep-blue); font-weight: bold; font-size: 11px; text-align: center; outline: none; cursor: pointer; box-sizing: border-box; }
 
         /* CREATOR PROFILE CSS */
         .creator-section {
@@ -132,6 +150,7 @@
             text-align: center;
             gap: 8px;
             margin-top: 5px;
+            box-sizing: border-box;
         }
         .creator-title {
             font-size: 10px;
@@ -187,16 +206,19 @@
         .modal-content img { width: 100%; max-height: 70vh; object-fit: contain; border-radius: 8px; margin: 15px 0; }
         .btn-close-modal { background-color: var(--venus-deep-blue); color: var(--white); border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 12px; }
 
-        .footer { background-color: var(--panel-bg); border: 1px solid var(--panel-border); padding: 14px 18px; border-radius: 12px; margin-top: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .footer { background-color: var(--panel-bg); border: 1px solid var(--panel-border); padding: 14px 18px; border-radius: 12px; margin-top: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); box-sizing: border-box; }
         .footer-text { color: var(--text-grey); font-size: 10px; text-align: center; line-height: 1.4; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
+<div class="app-container" id="report-container">
     <div class="top-bar">
         <img src="https://raw.githubusercontent.com/fblucciano/imagens-venus/1a75aeb06adc8e2e8fbcba2fe4acebfbd0113d01/Venus_logo_OG_adj.2026_logo_sec.png" alt="VenusMedtech" class="logo">
-        <button class="btn-action reset-btn" onclick="location.reload()">Reset</button>
+        <div id="action-buttons" style="display:flex; gap:8px;">
+            <button class="btn-action export-btn" onclick="exportToPDF()">Export PDF</button>
+            <button class="btn-action reset-btn" onclick="location.reload()">Reset</button>
+        </div>
     </div>
 
     <div class="panel">
@@ -353,6 +375,28 @@
 </div>
 
 <script>
+    /* =================================================================
+       EXPORT TO PDF FUNCTIONALITY
+       ================================================================= */
+    function exportToPDF() {
+        document.getElementById('action-buttons').style.display = 'none';
+        const container = document.getElementById('report-container');
+        container.classList.add('pdf-print-mode');
+
+        const opt = {
+            margin:       10, 
+            filename:     'VenusP_Sizing_Report.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true, windowWidth: 520, x: 0 }, 
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(container).save().then(() => {
+            container.classList.remove('pdf-print-mode');
+            document.getElementById('action-buttons').style.display = 'flex';
+        });
+    }
+
     const valveImages = {
         "AB20": "https://raw.githubusercontent.com/fblucciano/imagens-venus/9069e63d44d56d54148b383861cc14fa9af2d3b0/VITAE_20.jpg",
         "AB23": "https://raw.githubusercontent.com/fblucciano/imagens-venus/9069e63d44d56d54148b383861cc14fa9af2d3b0/VITAE_23.jpg",
@@ -418,13 +462,11 @@
             const selectedVol = volSelect.value;
             document.getElementById(`vitae-${activeValve}`).innerText = valveMath[activeValve][selectedVol].toFixed(2);
             
-            // Dinamismo: Aumenta o scale da imagem conforme o volume selecionado
             const volIndex = options.indexOf(selectedVol);
             const scaleFactor = 1.0 + (volIndex * 0.05); 
             document.getElementById(`img-${activeValve}`).style.transform = `scale(${scaleFactor})`;
         } else { volSelect.innerHTML = '<option value="Nominal">Nominal</option>'; volSelect.dataset.valve = ''; }
 
-        // Cálculos de clearances, etc mantidos...
         const lca = parseFloat(document.getElementById('in-lca').value);
         const rca = parseFloat(document.getElementById('in-rca').value);
         const stjl = parseFloat(document.getElementById('in-stjl').value);
