@@ -89,7 +89,7 @@
             letter-spacing: 1px;
         }
 
-        /* Grids Perfeitos e Alinhados */
+        /* Grids */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
         .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
@@ -145,6 +145,12 @@
             align-items: center;
             transition: all 0.3s ease;
             opacity: 0.6;
+            cursor: pointer;
+        }
+
+        .valve-card:hover {
+            border-color: var(--venus-blue);
+            opacity: 0.9;
         }
 
         .valve-card.active {
@@ -173,7 +179,7 @@
         /* Imagem da Válvula Aumentada em 30% */
         .valve-img-container {
             width: 100%;
-            height: 58px; /* Aumentado proporcionalmente (~30%) */
+            height: 58px;
             margin: 4px 0;
             display: flex;
             align-items: center;
@@ -245,6 +251,50 @@
             text-align: center;
             outline: none;
             cursor: pointer;
+        }
+
+        /* Modal / Janela Detalhes da Válvula */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .modal-content img {
+            width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .btn-close-modal {
+            background-color: var(--venus-deep-blue);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 12px;
         }
 
         /* Footer */
@@ -327,12 +377,12 @@
         </div>
     </div>
 
-    <!-- Section 2: Recommended Size -->
+    <!-- Section 2: Recommended Size (Clicáveis para abrir os detalhes) -->
     <div class="panel">
         <h2 class="panel-title">RECOMMENDED SIZE</h2>
         <div class="grid-4">
             <!-- AB20 -->
-            <div class="valve-card" id="card-AB20">
+            <div class="valve-card" id="card-AB20" onclick="openValveDetails('AB20')">
                 <div class="valve-title">AB20</div>
                 <div class="valve-label">Area Range</div>
                 <div class="valve-data">260-333</div>
@@ -343,7 +393,7 @@
                 <div class="valve-data vitae-val" id="vitae-AB20">323.65</div>
             </div>
             <!-- AB23 -->
-            <div class="valve-card" id="card-AB23">
+            <div class="valve-card" id="card-AB23" onclick="openValveDetails('AB23')">
                 <div class="valve-title">AB23</div>
                 <div class="valve-label">Area Range</div>
                 <div class="valve-data">330-433</div>
@@ -354,7 +404,7 @@
                 <div class="valve-data vitae-val" id="vitae-AB23">419.10</div>
             </div>
             <!-- AB26 -->
-            <div class="valve-card" id="card-AB26">
+            <div class="valve-card" id="card-AB26" onclick="openValveDetails('AB26')">
                 <div class="valve-title">AB26</div>
                 <div class="valve-label">Area Range</div>
                 <div class="valve-data">430-551</div>
@@ -365,7 +415,7 @@
                 <div class="valve-data vitae-val" id="vitae-AB26">526.85</div>
             </div>
             <!-- AB29 -->
-            <div class="valve-card" id="card-AB29">
+            <div class="valve-card" id="card-AB29" onclick="openValveDetails('AB29')">
                 <div class="valve-title">AB29</div>
                 <div class="valve-label">Area Range</div>
                 <div class="valve-data">543-669</div>
@@ -426,7 +476,42 @@
 
 </div>
 
+<!-- Modal de Detalhes da Válvula -->
+<div class="modal-overlay" id="valveModal" onclick="closeValveDetails(event)">
+    <div class="modal-content">
+        <h3 id="modalTitle" style="color: var(--venus-deep-blue); margin-top:0;">Valve Specifications</h3>
+        <img id="modalImg" src="" alt="Valve Details">
+        <div>
+            <button class="btn-close-modal" onclick="closeModalDirect()">Close</button>
+        </div>
+    </div>
+</div>
+
 <script>
+    // Links oficiais das imagens técnicas de cada válvula
+    const valveImages = {
+        "AB20": "https://raw.githubusercontent.com/fblucciano/imagens-venus/9069e63d44d56d54148b383861cc14fa9af2d3b0/VITAE_20.jpg",
+        "AB23": "https://raw.githubusercontent.com/fblucciano/imagens-venus/9069e63d44d56d54148b383861cc14fa9af2d3b0/VITAE_23.jpg",
+        "AB26": "https://raw.githubusercontent.com/fblucciano/imagens-venus/9069e63d44d56d54148b383861cc14fa9af2d3b0/VITAE_26.jpg",
+        "AB29": "https://raw.githubusercontent.com/fblucciano/imagens-venus/9069e63d44d56d54148b383861cc14fa9af2d3b0/VITAE_29.jpg"
+    };
+
+    function openValveDetails(valveName) {
+        document.getElementById('modalTitle').innerText = 'Vitae THV - ' + valveName;
+        document.getElementById('modalImg').src = valveImages[valveName];
+        document.getElementById('valveModal').style.display = 'flex';
+    }
+
+    function closeValveDetails(event) {
+        if (event.target.id === 'valveModal') {
+            document.getElementById('valveModal').style.display = 'none';
+        }
+    }
+
+    function closeModalDirect() {
+        document.getElementById('valveModal').style.display = 'none';
+    }
+
     // 1. Dados Matemáticos Oficiais
     const valveMath = {
         "AB20": { "-3 cc": 260.16, "-2 cc": 286.52, "-1 cc": 307.91, "Nominal": 323.65, "+0.5 cc": 333.29 },
