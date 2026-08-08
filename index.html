@@ -387,12 +387,12 @@
         "AB29": { "25 mL": 26.3, "26 mL": 26.7, "27 mL": 27.3, "28 mL": 27.8, "29 mL": 28.1, "30 mL": 28.4, "31 mL": 28.6, "Nominal (32 mL)": 28.9, "33 mL": 29.2 }
     };
 
-    // Alturas efetivas supra-anulares (H1 - H3) utilizadas para o STJ Clearance
+    // Alturas oficiais da planilha (Coronary = H2-H3, STJ = H1-H3)
     const heights = { 
-        "AB20": { coronary: 7, stj: 9.2 }, 
+        "AB20": { coronary: 7.0, stj: 9.2 }, 
         "AB23": { coronary: 7.8, stj: 10.4 }, 
         "AB26": { coronary: 10.1, stj: 12.8 }, 
-        "AB29": { coronary: 11, stj: 13.9 } 
+        "AB29": { coronary: 11.0, stj: 13.9 } 
     };
     
     const icons = { check: '✅', cancel: '❌', warning: '⚠️' };
@@ -455,10 +455,24 @@
             resStjComp.innerText = '--';
             resOversizeLbl.innerText = 'OVERSIZING'; resOversizeVal.innerText = '--'; resOversizeVal.style.color = 'var(--text-grey)';
         } else {
-            resLca.innerText = isNaN(lca) ? icons.cancel : ((lca - heights[activeValve].coronary >= 0) ? icons.check : icons.cancel);
-            resRca.innerText = isNaN(rca) ? icons.cancel : ((rca - heights[activeValve].coronary >= 0) ? icons.check : icons.cancel);
+            // Coronary Clearance Numérico (Patient Ostium Height - Commissure Height H2-H3)
+            if (isNaN(lca)) {
+                resLca.innerText = '--';
+            } else {
+                const gapLca = lca - heights[activeValve].coronary;
+                const colorLca = gapLca >= 0 ? '#2E7D32' : '#E65100';
+                resLca.innerHTML = `<span style="color:${colorLca}; font-weight:bold; font-size:11px;">${gapLca > 0 ? '+' : ''}${gapLca.toFixed(1)}mm</span>`;
+            }
+
+            if (isNaN(rca)) {
+                resRca.innerText = '--';
+            } else {
+                const gapRca = rca - heights[activeValve].coronary;
+                const colorRca = gapRca >= 0 ? '#2E7D32' : '#E65100';
+                resRca.innerHTML = `<span style="color:${colorRca}; font-weight:bold; font-size:11px;">${gapRca > 0 ? '+' : ''}${gapRca.toFixed(1)}mm</span>`;
+            }
             
-            // STJ Clearance Height Gap Calculation (Patient STJ Height - Valve Supra-annular Height)
+            // STJ Clearance Numérico (Patient STJ Height - Valve Supra-annular Height H1-H3)
             if (isNaN(stjl)) {
                 resStjl.innerText = '--';
             } else {
