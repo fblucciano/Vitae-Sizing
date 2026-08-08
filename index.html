@@ -32,10 +32,106 @@
             font-family: 'Circular', 'Yu Gothic UI', -apple-system, sans-serif;
             background-color: var(--bg-white);
             margin: 0;
-            padding: 20px;
+            padding: 35px 20px;
             display: flex;
             justify-content: center;
             color: var(--text-main);
+            min-height: 100vh;
+            box-sizing: border-box;
+            align-items: center;
+        }
+
+        /* TELA DE LOGIN */
+        #login-screen {
+            width: 100%;
+            max-width: 400px;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(23, 20, 52, 0.08);
+            box-sizing: border-box;
+        }
+
+        .login-logo {
+            height: 45px;
+            margin-bottom: 20px;
+        }
+
+        .login-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--venus-deep-blue);
+            margin: 0 0 8px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .login-subtitle {
+            font-size: 12px;
+            color: var(--text-grey);
+            margin: 0 0 25px 0;
+            line-height: 1.4;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--input-border);
+            border-radius: 12px;
+            font-size: 15px;
+            text-align: center;
+            box-sizing: border-box;
+            outline: none;
+            font-family: 'Space Mono', monospace;
+            background: var(--input-bg);
+            color: var(--venus-deep-blue);
+            margin-bottom: 15px;
+            transition: border-color 0.2s;
+        }
+
+        .login-input:focus {
+            border-color: var(--venus-blue);
+            background: #FFFFFF;
+        }
+
+        .login-btn {
+            width: 100%;
+            background-color: var(--venus-deep-blue);
+            color: #FFFFFF;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .login-btn:hover {
+            background-color: var(--venus-blue);
+        }
+
+        .error-msg {
+            color: #C62828;
+            font-size: 11px;
+            margin-top: 10px;
+            display: none;
+            font-weight: 600;
+        }
+
+        /* CONTEÚDO PRINCIPAL (INICIALMENTE OCULTO) */
+        #app-content {
+            display: none;
+            width: 100%;
+            max-width: 520px;
+            flex-direction: column;
+            gap: 15px;
+            box-sizing: border-box;
+            margin: 0 auto;
         }
 
         .app-container {
@@ -172,157 +268,173 @@
 </head>
 <body>
 
-<div class="app-container" id="report-container">
-    <div class="top-bar">
-        <img src="https://raw.githubusercontent.com/fblucciano/imagens-venus/1a75aeb06adc8e2e8fbcba2fe4acebfbd0113d01/Venus_logo_OG_adj.2026_logo_sec.png" alt="VenusMedtech" class="logo">
-        <div id="action-buttons" style="display:flex; gap:8px;">
-            <button class="btn-action export-btn" onclick="exportToPDF()">Export PDF</button>
-            <button class="btn-action reset-btn" onclick="location.reload()">Reset</button>
-        </div>
-    </div>
+<!-- TELA DE LOGIN -->
+<div id="login-screen">
+    <img src="https://raw.githubusercontent.com/fblucciano/imagens-venus/1a75aeb06adc8e2e8fbcba2fe4acebfbd0113d01/Venus_logo_OG_adj.2026_logo_sec.png" alt="VenusMedtech" class="login-logo">
+    <h2 class="login-title">Venus Vitae Sizing</h2>
+    <p class="login-subtitle">Enter corporate access password to continue</p>
+    
+    <form onsubmit="checkPassword(event)">
+        <input type="password" id="password-input" class="login-input" placeholder="••••••••" required autocomplete="off">
+        <button type="submit" class="login-btn">Access Calculator</button>
+        <div id="error-msg" class="error-msg">Incorrect password. Please try again.</div>
+    </form>
+</div>
 
-    <div class="panel">
-        <h2 class="panel-title">PATIENT & MEASUREMENTS</h2>
-        <div class="grid-2" style="margin-bottom: 12px;">
-            <div class="input-group">
-                <label>Patient Name (Optional)</label>
-                <input type="text" id="in-name" placeholder="John Doe">
-            </div>
-            <div class="input-group">
-                <label>Native Annulus Area (mm²)</label>
-                <input type="number" id="in-area" placeholder="0" class="trigger-calc">
+<!-- APLICATIVO PRINCIPAL (OCULTO ATÉ O LOGIN) -->
+<div id="app-content" class="app-container">
+    <div id="report-container" style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
+        <div class="top-bar">
+            <img src="https://raw.githubusercontent.com/fblucciano/imagens-venus/1a75aeb06adc8e2e8fbcba2fe4acebfbd0113d01/Venus_logo_OG_adj.2026_logo_sec.png" alt="VenusMedtech" class="logo">
+            <div id="action-buttons" style="display:flex; gap:8px;">
+                <button class="btn-action export-btn" onclick="exportToPDF()">Export PDF</button>
+                <button class="btn-action reset-btn" onclick="location.reload()">Reset</button>
             </div>
         </div>
-        <div class="grid-3" style="margin-bottom: 12px;">
-            <div class="input-group">
-                <label>Preferred THV</label>
-                <select id="in-pref" class="trigger-calc">
-                    <option value="Automatic">Auto</option>
-                    <option value="AB20">AB20</option>
-                    <option value="AB23">AB23</option>
-                    <option value="AB26">AB26</option>
-                    <option value="AB29">AB29</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label>LCA Height</label>
-                <input type="number" id="in-lca" placeholder="mm" class="trigger-calc">
-            </div>
-            <div class="input-group">
-                <label>RCA Height</label>
-                <input type="number" id="in-rca" placeholder="mm" class="trigger-calc">
-            </div>
-        </div>
-        <div class="grid-3" style="margin-bottom: 12px;">
-            <div class="input-group">
-                <label>Calcification</label>
-                <input type="number" id="in-calc" placeholder="mm³" class="trigger-calc">
-            </div>
-            <div class="input-group">
-                <label>STJL Height</label>
-                <input type="number" id="in-stjl" placeholder="mm" class="trigger-calc">
-            </div>
-            <div class="input-group">
-                <label>STJR Height</label>
-                <input type="number" id="in-stjr" placeholder="mm" class="trigger-calc">
-            </div>
-        </div>
-        <div class="grid-2">
-            <div class="input-group" style="grid-column: span 2;">
-                <label>STJ Diameter (mm)</label>
-                <input type="number" id="in-stj-diam" placeholder="mm" class="trigger-calc">
-            </div>
-        </div>
-    </div>
 
-    <div class="panel">
-        <h2 class="panel-title">RECOMMENDED SIZE</h2>
-        <div class="grid-4">
-            <div class="valve-card" id="card-AB20" onclick="openValveDetails('AB20')">
-                <div class="valve-title">AB20</div>
-                <div class="valve-label">Area Range</div>
-                <div class="valve-data">260-333</div>
-                <div class="valve-img-container"><img id="img-AB20" src="https://raw.githubusercontent.com/fblucciano/imagens-venus/1a75aeb06adc8e2e8fbcba2fe4acebfbd0113d01/VItae-F.png" alt="Valve"></div>
-                <div class="valve-label">Vitae Area</div>
-                <div class="valve-data vitae-val" id="vitae-AB20">323.65</div>
+        <div class="panel">
+            <h2 class="panel-title">PATIENT & MEASUREMENTS</h2>
+            <div class="grid-2" style="margin-bottom: 12px;">
+                <div class="input-group">
+                    <label>Patient Name (Optional)</label>
+                    <input type="text" id="in-name" placeholder="John Doe">
+                </div>
+                <div class="input-group">
+                    <label>Native Annulus Area (mm²)</label>
+                    <input type="number" id="in-area" placeholder="0" class="trigger-calc">
+                </div>
             </div>
-            <div class="valve-card" id="card-AB23" onclick="openValveDetails('AB23')">
-                <div class="valve-title">AB23</div>
-                <div class="valve-label">Area Range</div>
-                <div class="valve-data">330-433</div>
-                <div class="valve-img-container"><img id="img-AB23" src="https://raw.githubusercontent.com/fblucciano/imagens-venus/1a75aeb06adc8e2e8fbcba2fe4acebfbd0113d01/VItae-F.png" alt="Valve"></div>
-                <div class="valve-label">Vitae Area</div>
-                <div class="valve-data vitae-val" id="vitae-AB23">419.10</div>
+            <div class="grid-3" style="margin-bottom: 12px;">
+                <div class="input-group">
+                    <label>Preferred THV</label>
+                    <select id="in-pref" class="trigger-calc">
+                        <option value="Automatic">Auto</option>
+                        <option value="AB20">AB20</option>
+                        <option value="AB23">AB23</option>
+                        <option value="AB26">AB26</option>
+                        <option value="AB29">AB29</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>LCA Height</label>
+                    <input type="number" id="in-lca" placeholder="mm" class="trigger-calc">
+                </div>
+                <div class="input-group">
+                    <label>RCA Height</label>
+                    <input type="number" id="in-rca" placeholder="mm" class="trigger-calc">
+                </div>
             </div>
-            <div class="valve-card" id="card-AB26" onclick="openValveDetails('AB26')">
-                <div class="valve-title">AB26</div>
-                <div class="valve-label">Area Range</div>
-                <div class="valve-data">430-551</div>
-                <div class="valve-img-container"><img id="img-AB26" src="https://raw.githubusercontent.com/fblucciano/imagens-venus/1a75aeb06adc8e2e8fbcba2fe4acebfbd0113d01/VItae-F.png" alt="Valve"></div>
-                <div class="valve-label">Vitae Area</div>
-                <div class="valve-data vitae-val" id="vitae-AB26">526.85</div>
+            <div class="grid-3" style="margin-bottom: 12px;">
+                <div class="input-group">
+                    <label>Calcification</label>
+                    <input type="number" id="in-calc" placeholder="mm³" class="trigger-calc">
+                </div>
+                <div class="input-group">
+                    <label>STJL Height</label>
+                    <input type="number" id="in-stjl" placeholder="mm" class="trigger-calc">
+                </div>
+                <div class="input-group">
+                    <label>STJR Height</label>
+                    <input type="number" id="in-stjr" placeholder="mm" class="trigger-calc">
+                </div>
             </div>
-            <div class="valve-card" id="card-AB29" onclick="openValveDetails('AB29')">
-                <div class="valve-title">AB29</div>
-                <div class="valve-label">Area Range</div>
-                <div class="valve-data">543-669</div>
-                <div class="valve-img-container"><img id="img-AB29" src="https://raw.githubusercontent.com/fblucciano/imagens-venus/1a75aeb06adc8e2e8fbcba2fe4acebfbd0113d01/VItae-F.png" alt="Valve"></div>
-                <div class="valve-label">Vitae Area</div>
-                <div class="valve-data vitae-val" id="vitae-AB29">655.97</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="panel">
-        <h2 class="panel-title">KEY RESULTS</h2>
-        <div class="grid-6">
-            <div class="result-card">
-                <div class="result-title">CORONARY<br>CLEARANCE</div>
-                <div class="result-values"><div class="col">LCA<span id="res-lca">--</span></div><div class="col">RCA<span id="res-rca">--</span></div></div>
-            </div>
-            <div class="result-card">
-                <div class="result-title">STJ<br>CLEARANCE</div>
-                <div class="result-values"><div class="col">STJL<span id="res-stjl">--</span></div><div class="col">STJR<span id="res-stjr">--</span></div></div>
-            </div>
-            <div class="result-card">
-                <div class="result-title">STJ DIAMETER<br>VS VALVE</div>
-                <div class="result-values" style="font-size: 10px; font-weight:bold; font-family:'Space Mono', monospace; flex-direction: column; justify-content: center;" id="res-stj-comp">--</div>
-            </div>
-            <div class="result-card">
-                <div class="result-title">CALCIFICATION<br>SEVERITY</div>
-                <div class="result-values" style="font-size: 11px; font-weight:bold; font-family:'Circular', sans-serif;" id="res-calc">--</div>
-            </div>
-            <div class="result-card">
-                <div class="result-title" id="res-oversize-label">OVERSIZING</div>
-                <div class="result-values" style="font-size: 12px; font-weight:bold;" id="res-oversize-val">--</div>
-            </div>
-            <div class="result-card" style="justify-content: flex-end;">
-                <div class="result-title" style="margin-bottom: 4px;">VOLUME</div>
-                <select class="volume-selector trigger-calc" id="in-vol"><option value="Nominal">Nominal</option></select>
+            <div class="grid-2">
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>STJ Diameter (mm)</label>
+                    <input type="number" id="in-stj-diam" placeholder="mm" class="trigger-calc">
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- PROFILE SECTION -->
-    <div class="creator-section">
-        <div class="creator-title">Designed & Developed by</div>
-        
-        <img src="https://raw.githubusercontent.com/fblucciano/imagens-venus/a2309b9d3a7fe352cb10acc6f1b9a4785fa8bb66/Image.jpeg" alt="Fabio Silva" class="creator-avatar" onclick="openCreatorModal()" title="Click to view full image">
-        
-        <div class="creator-info">
-            <div class="creator-name">
-                Fabio Silva
-                <img src="https://raw.githubusercontent.com/fblucciano/imagens-venus/4a254e93a90f6225406d11dafa8c519437a99e9b/Bandeira-Nacionalsi%CC%81mbolo-maior-da-Pa%CC%81tria-Brasileira-Foto-Divulgac%CC%A7a%CC%83o.jpg" alt="Brazil" class="flag-icon">
-                <span style="font-weight: normal; font-size: 13px; color: rgba(255, 255, 255, 0.9);">Brazil</span>
+        <div class="panel">
+            <h2 class="panel-title">RECOMMENDED SIZE</h2>
+            <div class="grid-4">
+                <div class="valve-card" id="card-AB20" onclick="openValveDetails('AB20')">
+                    <div class="valve-title">AB20</div>
+                    <div class="valve-label">Area Range</div>
+                    <div class="valve-data">260-333</div>
+                    <div class="valve-img-container"><img id="img-AB20" src="https://raw.githubusercontent.com/fblucciano/imagens-venus/1a75aeb06adc8e2e8fbcba2fe4acebfbd0113d01/VItae-F.png" alt="Valve"></div>
+                    <div class="valve-label">Vitae Area</div>
+                    <div class="valve-data vitae-val" id="vitae-AB20">323.65</div>
+                </div>
+                <div class="valve-card" id="card-AB23" onclick="openValveDetails('AB23')">
+                    <div class="valve-title">AB23</div>
+                    <div class="valve-label">Area Range</div>
+                    <div class="valve-data">330-433</div>
+                    <div class="valve-img-container"><img id="img-AB23" src="https://raw.githubusercontent.com/fblucciano/imagens-venus/1a75aeb06adc8e2e8fbcba2fe4acebfbd0113d01/VItae-F.png" alt="Valve"></div>
+                    <div class="valve-label">Vitae Area</div>
+                    <div class="valve-data vitae-val" id="vitae-AB23">419.10</div>
+                </div>
+                <div class="valve-card" id="card-AB26" onclick="openValveDetails('AB26')">
+                    <div class="valve-title">AB26</div>
+                    <div class="valve-label">Area Range</div>
+                    <div class="valve-data">430-551</div>
+                    <div class="valve-img-container"><img id="img-AB26" src="https://raw.githubusercontent.com/fblucciano/imagens-venus/1a75aeb06adc8e2e8fbcba2fe4acebfbd0113d01/VItae-F.png" alt="Valve"></div>
+                    <div class="valve-label">Vitae Area</div>
+                    <div class="valve-data vitae-val" id="vitae-AB26">526.85</div>
+                </div>
+                <div class="valve-card" id="card-AB29" onclick="openValveDetails('AB29')">
+                    <div class="valve-title">AB29</div>
+                    <div class="valve-label">Area Range</div>
+                    <div class="valve-data">543-669</div>
+                    <div class="valve-img-container"><img id="img-AB29" src="https://raw.githubusercontent.com/fblucciano/imagens-venus/1a75aeb06adc8e2e8fbcba2fe4acebfbd0113d01/VItae-F.png" alt="Valve"></div>
+                    <div class="valve-label">Vitae Area</div>
+                    <div class="valve-data vitae-val" id="vitae-AB29">655.97</div>
+                </div>
             </div>
-            <div>✉️ <a href="mailto:fabio.dasilva@venusmedtech.eu">fabio.dasilva@venusmedtech.eu</a></div>
-            <div>📞 <a href="tel:+5511974103530">+55 11 97410-3530</a></div>
         </div>
-    </div>
 
-    <div class="footer">
-        <div class="footer-text">
-            <strong>Disclaimer:</strong> This tool is a calculation support calculator only and should not be used as the sole source to determine the valve size. The final valve size selection must be determined and validated by the <strong>Heart Team</strong>.
+        <div class="panel">
+            <h2 class="panel-title">KEY RESULTS</h2>
+            <div class="grid-6">
+                <div class="result-card">
+                    <div class="result-title">CORONARY<br>CLEARANCE</div>
+                    <div class="result-values"><div class="col">LCA<span id="res-lca">--</span></div><div class="col">RCA<span id="res-rca">--</span></div></div>
+                </div>
+                <div class="result-card">
+                    <div class="result-title">STJ<br>CLEARANCE</div>
+                    <div class="result-values"><div class="col">STJL<span id="res-stjl">--</span></div><div class="col">STJR<span id="res-stjr">--</span></div></div>
+                </div>
+                <div class="result-card">
+                    <div class="result-title">STJ DIAMETER<br>VS VALVE</div>
+                    <div class="result-values" style="font-size: 10px; font-weight:bold; font-family:'Space Mono', monospace; flex-direction: column; justify-content: center;" id="res-stj-comp">--</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-title">CALCIFICATION<br>SEVERITY</div>
+                    <div class="result-values" style="font-size: 11px; font-weight:bold; font-family:'Circular', sans-serif;" id="res-calc">--</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-title" id="res-oversize-label">OVERSIZING</div>
+                    <div class="result-values" style="font-size: 12px; font-weight:bold;" id="res-oversize-val">--</div>
+                </div>
+                <div class="result-card" style="justify-content: flex-end;">
+                    <div class="result-title" style="margin-bottom: 4px;">VOLUME</div>
+                    <select class="volume-selector trigger-calc" id="in-vol"><option value="Nominal">Nominal</option></select>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROFILE SECTION -->
+        <div class="creator-section">
+            <div class="creator-title">Designed & Developed by</div>
+            
+            <img src="https://raw.githubusercontent.com/fblucciano/imagens-venus/a2309b9d3a7fe352cb10acc6f1b9a4785fa8bb66/Image.jpeg" alt="Fabio Silva" class="creator-avatar" onclick="openCreatorModal()" title="Click to view full image">
+            
+            <div class="creator-info">
+                <div class="creator-name">
+                    Fabio Silva
+                    <img src="https://raw.githubusercontent.com/fblucciano/imagens-venus/4a254e93a90f6225406d11dafa8c519437a99e9b/Bandeira-Nacionalsi%CC%81mbolo-maior-da-Pa%CC%81tria-Brasileira-Foto-Divulgac%CC%A7a%CC%83o.jpg" alt="Brazil" class="flag-icon">
+                    <span style="font-weight: normal; font-size: 13px; color: rgba(255, 255, 255, 0.9);">Brazil</span>
+                </div>
+                <div>✉️ <a href="mailto:fabio.dasilva@venusmedtech.eu">fabio.dasilva@venusmedtech.eu</a></div>
+                <div>📞 <a href="tel:+5511974103530">+55 11 97410-3530</a></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-text">
+                <strong>Disclaimer:</strong> This tool is a calculation support calculator only and should not be used as the sole source to determine the valve size. The final valve size selection must be determined and validated by the <strong>Heart Team</strong>.
+            </div>
         </div>
     </div>
 </div>
@@ -345,6 +457,24 @@
 </div>
 
 <script>
+    // SENHA UNIVERSAL (Altere aqui se desejar mudar a senha)[span_3](start_span)[span_3](end_span)
+    const MASTER_PASSWORD = "venus2026";
+
+    function checkPassword(event) {
+        event.preventDefault();
+        const inputVal = document.getElementById('password-input').value;
+        const errorMsg = document.getElementById('error-msg');
+
+        if (inputVal === MASTER_PASSWORD) {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-content').style.display = 'flex';
+            document.body.style.alignItems = 'flex-start';
+        } else {
+            errorMsg.style.display = 'block';
+            document.getElementById('password-input').value = '';
+        }
+    }
+
     /* =================================================================
        EXPORT TO PDF FUNCTIONALITY (Centralizado)
        ================================================================= */
