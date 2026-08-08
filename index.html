@@ -457,8 +457,23 @@
         } else {
             resLca.innerText = isNaN(lca) ? icons.cancel : ((lca - heights[activeValve].coronary >= 0) ? icons.check : icons.cancel);
             resRca.innerText = isNaN(rca) ? icons.cancel : ((rca - heights[activeValve].coronary >= 0) ? icons.check : icons.cancel);
-            resStjl.innerText = isNaN(stjl) ? icons.warning : ((stjl - heights[activeValve].stj >= 0) ? icons.check : icons.warning);
-            resStjr.innerText = isNaN(stjr) ? icons.warning : ((stjr - heights[activeValve].stj >= 0) ? icons.check : icons.warning);
+            
+            // STJ Clearance Height Gap Calculation (Patient STJ Height - Valve Supra-annular Height)
+            if (isNaN(stjl)) {
+                resStjl.innerText = '--';
+            } else {
+                const stjHeightGap = stjl - heights[activeValve].stj;
+                const color = stjHeightGap >= 0 ? '#2E7D32' : '#E65100';
+                resStjl.innerHTML = `<span style="color:${color}; font-weight:bold; font-size:11px;">${stjHeightGap > 0 ? '+' : ''}${stjHeightGap.toFixed(1)}mm</span>`;
+            }
+
+            if (isNaN(stjr)) {
+                resStjr.innerText = '--';
+            } else {
+                const stjHeightGapR = stjr - heights[activeValve].stj;
+                const colorR = stjHeightGapR >= 0 ? '#2E7D32' : '#E65100';
+                resStjr.innerHTML = `<span style="color:${colorR}; font-weight:bold; font-size:11px;">${stjHeightGapR > 0 ? '+' : ''}${stjHeightGapR.toFixed(1)}mm</span>`;
+            }
             
             // Comparação STJ Diameter vs Valve Expected Diameter da Tabela Oficial
             if (isNaN(stjDiam)) {
